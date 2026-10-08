@@ -1,7 +1,54 @@
 @import "tailwindcss";
 
+/* Enable class-based dark mode (Tailwind v4) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens (light theme values).
+ * The `portfolio-*` colors generate utilities like `bg-portfolio-surface`,
+ * `text-portfolio-muted`, `border-portfolio-border`, `text-portfolio-mc`, ...
+ */
+@theme {
+  /* Brand accent ("main color") and the text color that sits on top of it */
+  --color-portfolio-mc: #ca8a04;
+  --color-portfolio-mc-strong: #a16207;
+  --color-portfolio-on-mc: #ffffff;
+
+  /* Surfaces & text */
+  --color-portfolio-bg: #ffffff;
+  --color-portfolio-surface: #f8fafc;
+  --color-portfolio-text: #0f172a;
+  --color-portfolio-muted: #475569;
+  --color-portfolio-border: #e2e8f0;
+}
+
+/* Dark theme overrides (higher specificity than :root) */
+html.dark {
+  --color-portfolio-mc: #facc15;
+  --color-portfolio-mc-strong: #eab308;
+  --color-portfolio-on-mc: #0b1120;
+
+  --color-portfolio-bg: #0b1120;
+  --color-portfolio-surface: #111827;
+  --color-portfolio-text: #f1f5f9;
+  --color-portfolio-muted: #94a3b8;
+  --color-portfolio-border: #1f2937;
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 body {
-  @apply m-0;
+  @apply m-0 bg-portfolio-bg text-portfolio-text;
+  overflow-x: hidden;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -12,4 +59,12 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* Keep content visible for visitors who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }

@@ -4,7 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="/favicon.ico" />
-    <meta name="theme-color" content="#000000" />
+    <meta
+      name="theme-color"
+      content="#ffffff"
+      media="(prefers-color-scheme: light)"
+    />
+    <meta
+      name="theme-color"
+      content="#0b1120"
+      media="(prefers-color-scheme: dark)"
+    />
     <meta
       name="description"
       content="Web site created using create-tsrouter-app"
@@ -12,6 +21,19 @@
     <link rel="apple-touch-icon" href="/logo192.png" />
     <link rel="manifest" href="/manifest.json" />
     <title>Create TanStack App - portfolio-v2</title>
+    <script>
+      // Apply the saved theme before paint to avoid a flash of the wrong colors
+      ;(function () {
+        try {
+          var stored = localStorage.getItem('portfolio-theme')
+          var prefersDark = window.matchMedia(
+            '(prefers-color-scheme: dark)',
+          ).matches
+          var theme = stored || (prefersDark ? 'dark' : 'light')
+          document.documentElement.classList.toggle('dark', theme === 'dark')
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="app"></div>

@@ -1,39 +1,54 @@
 import { createFileRoute } from '@tanstack/react-router'
-import logo from '../logo.svg'
+import { useState } from 'react'
+
+import About from '../components/About'
+import Experience from '../components/Experience'
+import Footer from '../components/Footer'
+import Header from '../components/Header'
+import Home from '../components/Home'
+import Projects from '../components/Projects'
+import Sidebar from '../components/Sidebar'
+import Skills from '../components/Skills'
+import { useAos } from '../hooks/useAos'
+import { useTheme } from '../hooks/useTheme'
 
 export const Route = createFileRoute('/')({
   component: App,
 })
 
 function App() {
+  const [sideBar, setSideBar] = useState(false)
+  const { theme, toggleTheme } = useTheme()
+
+  useAos()
+
+  const handleClick = () => setSideBar(true)
+
   return (
-    <div className="text-center">
-      <header className="min-h-screen flex flex-col items-center justify-center bg-[#282c34] text-white text-[calc(10px+2vmin)]">
-        <img
-          src={logo}
-          className="h-[40vmin] pointer-events-none animate-[spin_20s_linear_infinite]"
-          alt="logo"
+    <main className="min-h-screen bg-portfolio-bg text-portfolio-text">
+      {sideBar && (
+        <Sidebar
+          setSideBar={setSideBar}
+          theme={theme}
+          toggleTheme={toggleTheme}
         />
-        <p>
-          Edit <code>src/routes/index.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <a
-          className="text-[#61dafb] hover:underline"
-          href="https://tanstack.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn TanStack
-        </a>
-      </header>
-    </div>
+      )}
+
+      <Header
+        handleClick={handleClick}
+        sideBar={sideBar}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
+      <div className="lg:px-[3%] max-w-7xl mx-auto p-4 pt-28">
+        <Home />
+        <About />
+        {/* <Experience /> */}
+        <Skills />
+        <Projects />
+        <Experience />
+      </div>
+      <Footer />
+    </main>
   )
 }

@@ -1,67 +1,74 @@
-import { Link } from '@tanstack/react-router'
+import { FaBars, FaMoon, FaSun } from 'react-icons/fa6'
 
-import { useState } from 'react'
-import { Home, Menu, X } from 'lucide-react'
+import { buttons } from './Data'
+import type { Theme } from '../hooks/useTheme'
 
-export default function Header() {
-  const [isOpen, setIsOpen] = useState(false)
+interface HeaderProps {
+  handleClick: () => void
+  sideBar: boolean
+  theme: Theme
+  toggleTheme: () => void
+}
+
+const Header = ({ handleClick, sideBar, theme, toggleTheme }: HeaderProps) => {
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
 
   return (
-    <>
-      <header className="p-4 flex items-center bg-gray-800 text-white shadow-lg">
+    <header
+      id="header"
+      className="fixed top-0 left-0 right-0 w-full z-50 transition-colors duration-300 p-4 lg:px-[3%] lg:py-4 bg-portfolio-bg/90 backdrop-blur-md border-b border-portfolio-border shadow-md"
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center">
+        {/* Logo */}
         <button
-          onClick={() => setIsOpen(true)}
-          className="p-2 hover:bg-gray-700 rounded-lg transition-colors"
-          aria-label="Open menu"
+          onClick={() => scrollToSection('home')}
+          className="text-4xl font-semibold text-portfolio-text"
         >
-          <Menu size={24} />
+          Abeeb<span className="text-portfolio-mc">don</span>
         </button>
-        <h1 className="ml-4 text-xl font-semibold">
-          <Link to="/">
-            <img
-              src="/tanstack-word-logo-white.svg"
-              alt="TanStack Logo"
-              className="h-10"
-            />
-          </Link>
-        </h1>
-      </header>
 
-      <aside
-        className={`fixed top-0 left-0 h-full w-80 bg-gray-900 text-white shadow-2xl z-50 transform transition-transform duration-300 ease-in-out flex flex-col ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`}
-      >
-        <div className="flex items-center justify-between p-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold">Navigation</h2>
+        {/* Desktop Nav */}
+        <nav className="hidden max-[760px]:hidden md:flex items-center gap-8 text-lg">
+          {buttons.map((button) => (
+            <a
+              key={button.id}
+              href={`#${button.id}`}
+              className="transition duration-300 text-portfolio-muted hover:text-portfolio-mc"
+            >
+              {button.text}
+            </a>
+          ))}
+
+          {/* Theme Toggle */}
           <button
-            onClick={() => setIsOpen(false)}
-            className="p-2 hover:bg-gray-800 rounded-lg transition-colors"
-            aria-label="Close menu"
+            id="theme-toggle"
+            type="button"
+            onClick={toggleTheme}
+            aria-label="Toggle color theme"
+            title={
+              theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'
+            }
+            className="w-10 h-10 rounded-full flex items-center justify-center border border-portfolio-border bg-portfolio-surface text-portfolio-text transition-colors hover:border-portfolio-mc hover:text-portfolio-mc"
           >
-            <X size={24} />
+            {theme === 'dark' ? <FaSun size={20} /> : <FaMoon size={20} />}
           </button>
-        </div>
-
-        <nav className="flex-1 p-4 overflow-y-auto">
-          <Link
-            to="/"
-            onClick={() => setIsOpen(false)}
-            className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800 transition-colors mb-2"
-            activeProps={{
-              className:
-                'flex items-center gap-3 p-3 rounded-lg bg-cyan-600 hover:bg-cyan-700 transition-colors mb-2',
-            }}
-          >
-            <Home size={20} />
-            <span className="font-medium">Home</span>
-          </Link>
-
-          {/* Demo Links Start */}
-
-          {/* Demo Links End */}
         </nav>
-      </aside>
-    </>
+
+        {/* Mobile Menu Icon */}
+        <div
+          onClick={handleClick}
+          className="md:hidden cursor-pointer text-3xl text-portfolio-mc"
+        >
+          {!sideBar && <FaBars />}
+        </div>
+      </div>
+    </header>
   )
 }
+
+export default Header
